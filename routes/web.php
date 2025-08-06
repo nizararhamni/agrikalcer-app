@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RecommenderController;
+use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\PhotovoltaicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,21 +24,13 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/recommender', function() {
-    return view('recommender');
-})->name('recommender');
+Route::get('/recommender', [RecommenderController::class, 'index'])->name('recommender');
 
-Route::get('/statistics', function () {
-    return view('statistics');
-})->name('statistics');
+Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics');
 
-Route::get('/photovoltaic', function () {
-    return view('photovoltaic');
-})->name('photovoltaic');
+Route::get('/photovoltaic', [PhotovoltaicController::class, 'index'])->name('photovoltaic');
 
-Route::get('/history', function () {
-    return view('history');
-})->name('history');
+Route::get('/history', [HistoryController::class, 'index'])->name('history');
 
 Route::get('/notifications', function() {
     return view('notifications');

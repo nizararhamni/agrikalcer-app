@@ -47,7 +47,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="cropForm" method="POST" action="{{ route('predict') }}">
+                    <form id="cropForm" method="POST" action="">
                         @csrf
                         <div class="form-group">
                             <label for="nitrogen" class="form-label">Amount of Nitrogen in Soil</label>
@@ -86,6 +86,3 @@
         </div>
     </div>
 @endsection
-@push()
-    
-@endpush
