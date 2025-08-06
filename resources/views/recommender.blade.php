@@ -11,6 +11,13 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-black">Crop Recommender</h6>
         </div>
+        {{-- <div class="m-5">
+            <h4 class="h4">Auto Recommender</h4>
+            <h5 class="h5">Best This Day: {{ $thisDayBest || null }}</h5>
+            <h5 class="h5">Best This Week: {{ $thisWeekBest || null }}</h5>
+            <h5 class="h5">Best This Month: {{ $thisMonthBest || null }}</h5>
+            <h5 class="h5">Best This Year: {{ $thisYearBest || null }}</h5>
+        </div> --}}
         <div class="m-5">
         <h4 class="h4">Coba Crop Recommender dengan input manual </h4>
 
@@ -44,7 +51,7 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         @if($prediction !== null)
-            <h4 class="h4 mt-5">Hasil Prediksi: {{ $prediction }}</h4>
+            <h4 class="h4 mt-5">Hasil Prediksi Manual: {{ $prediction }}</h4>
         @endif
     </div>
     </div>
