@@ -8,7 +8,7 @@
         <p class="ml-5">Tanggal Hari ini: {{ $dateToday }}</p>
     </div>
     <h4 class="h4">Data Hari Ini</h4>
-    <table class="table">
+      <table class="table">
         <thead>
           <tr>
             <th scope="col">Voltage</th>
