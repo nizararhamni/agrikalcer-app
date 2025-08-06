@@ -19,7 +19,6 @@
             <h5 class="h5">Best This Year: {{ $thisYearBest || null }}</h5>
         </div> --}}
         <div class="m-5">
-        <h4 class="h4">Coba Crop Recommender dengan input manual </h4>
 
         <form action="{{ route('predict') }}" method="POST" class="mx-5">
             @csrf

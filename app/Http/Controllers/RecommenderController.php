@@ -16,7 +16,7 @@ class RecommenderController extends Controller
 
     public function predict(Request $request) {
         $response = Http::post('http://localhost:8000/predict', [
-            'n' => $request-> n ,
+            'n' => $request-> n,
             'p' => $request-> p,
             'k' => $request-> k,
             'temp' => $request-> temp,
@@ -27,6 +27,17 @@ class RecommenderController extends Controller
         if ($response->successful()) {
             $data = $response->json();
             $prediction = $data['prediction'];
+
+
+            $response = Http::post('http://localhost:3000/api/history', [
+                'n' => $request-> n,
+                'p' => $request-> p,
+                'k' => $request-> k,
+                'temp' => $request-> temp,
+                'humidity' => $request-> humidity,
+                'ph' => $request-> ph, 
+                'result'=> $prediction 
+            ]);
 
             return view('recommender', [
                 'prediction' => $prediction

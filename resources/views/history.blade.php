@@ -12,8 +12,6 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>No.</th>
-                            <th>Node</th>
                             <th>Date</th>
                             <th>N(mg/kg)</th>
                             <th>P(mg/kg)</th>
@@ -21,20 +19,22 @@
                             <th>Temperature(&deg;C)</th>
                             <th>pH</th>
                             <th>Humidity(%)</th>
+                            <th>Crop</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>12-04-2004 18.30</td>
-                            <td>2.5</td>
-                            <td>7.2</td>
-                            <td>11.8</td>
-                            <td>35</td>
-                            <td>7.6</td>
-                            <td>20</td>
-                        </tr>
+                        @foreach ( $historyData as $data )
+                            <tr>
+                                <th>{{ $data["date"] }}</th>
+                                <th>{{ $data["n"] }}</th>
+                                <th>{{ $data["p"] }}</th>
+                                <th>{{ $data["k"] }}</th>
+                                <th>{{ $data["temp"] }}</th>
+                                <th>{{ $data["ph"] }}</th>
+                                <th>{{ $data["humidity"] }}</th>
+                                <th>{{ $data["result"] }}</th>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
