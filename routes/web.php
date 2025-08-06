@@ -26,6 +26,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::get('/recommender', [RecommenderController::class, 'index'])->name('recommender');
 
+Route::post('/predict', [RecommenderController::class, 'predict'])->name('predict');
+
 Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics');
 
 Route::get('/photovoltaic', [PhotovoltaicController::class, 'index'])->name('photovoltaic');
