@@ -26,6 +26,15 @@
                             <option value="Humidity">Humidity</option>
                         </select>
                     </div>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                        <div>
+                            <button class="btn btn-sm timeframe-btn mx-1 btn-secondary" data-timeframe="1day">1 Hari</button>
+                            <button class="btn btn-sm timeframe-btn mx-1 btn-secondary" data-timeframe="1week">1 Minggu</button>
+                            <button class="btn btn-sm timeframe-btn mx-1 btn-secondary" data-timeframe="1month">1 Bulan</button>
+                            <button class="btn btn-sm timeframe-btn mx-1 btn-secondary" data-timeframe="1year">1 Tahun</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="card-body">
@@ -107,6 +116,12 @@
                 myLineChart.options.scales.yAxes[0].scaleLabel.labelString = chartYAxisLabel[this.value];
                 myLineChart.update();
             }
+        });
+
+        $('.timeframe-btn').on('click', function() {
+            selectedTimeframe = $(this).data('timeframe');
+            $('.timeframe-btn').removeClass('btn-primary').addClass('btn-secondary');
+            $(this).addClass('btn-primary').removeClass('btn-secondary');
         });
     </script>
 @endpush

@@ -53,7 +53,7 @@
                     
                     <div class="data-summary" style="max-height: 228px; overflow-y: auto;">
                         <div class="text-sm">
-                            <p class="mb-2">00:00: <span class="font-weight-bold">45.2</span></p>
+                            <p class="mb-2">  <span class="font-weight-bold">45.2</span></p>
                             <p class="mb-2">02:00: <span class="font-weight-bold">52.1</span></p>
                             <p class="mb-2">04:00: <span class="font-weight-bold">48.7</span></p>
                             <p class="mb-2">06:00: <span class="font-weight-bold">61.3</span></p>
