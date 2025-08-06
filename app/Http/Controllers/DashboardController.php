@@ -32,5 +32,25 @@ class DashboardController extends Controller
         }
     }
     
-    
+    public function daily(Request $request) {
+        $dateToday = Carbon::now();
+        $response = Http::post('http://localhost:3000/api/crop/daily', [
+            'date' =>$request->tanggal,
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $dataPv = $data["data"];
+
+            return view('dashboard', [
+                "dataDaily" => $dataPv,
+                "dateToday" => $dateToday
+            ]);
+
+        } else {
+            $statusCode = $response->status();
+            $errorMessage = $response->body();
+            return view('dashboard');
+        }
+    }
 }
