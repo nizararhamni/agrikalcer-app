@@ -28,122 +28,123 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
-// Area Chart Example
-var ctx = document.getElementById("myAreaChart");
-var myLineChart = new Chart(ctx, {
-    type: "line",
-    data: {
-        labels: [
-            "0",
-            "2",
-            "4",
-            "6",
-            "8",
-            "10",
-            "12",
-            "14",
-            "16",
-            "18",
-            "20",
-            "22",
-        ],
-        datasets: [
-            {
-                label: "Sensor Value",
-                lineTension: 0.3,
-                backgroundColor: "rgba(78, 115, 223, 0.05)",
-                borderColor: "rgba(78, 115, 223, 1)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointBorderColor: "rgba(78, 115, 223, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-                data: [45, 52, 48, 61, 55, 67, 73, 78, 85, 82, 79, 72, 68],
+const chart = document.getElementById("myAreaChart").getContext("2d");
+    let myLineChart;
+
+    async function fetchSensorData() {
+        const date = document.getElementById('dateRange').value;
+        const sensor = document.getElementById('sensorTypeSelect').value;
+
+        const res = await fetch('/dashboard/fetch-sensor', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-        ],
-    },
-    options: {
-        maintainAspectRatio: false,
-        layout: {
-            padding: {
-                left: 10,
-                right: 25,
-                top: 25,
-                bottom: 0,
+            body: JSON.stringify({ date, sensor })
+        });
+
+        const result = await res.json();
+
+        if (result.sensorData) {
+            const labels = result.sensorData.map((item) => item.hour);   // ex: "08:00"
+            const values = result.sensorData.map((item) => item.value);  // ex: 45.2
+
+            updateChart(labels, values);
+            updateSummary(result.sensorData);
+        }
+    }
+
+    function updateChart(labels, values) {
+        if (myLineChart) {
+            myLineChart.destroy();
+        }
+
+        myLineChart = new Chart(chart, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Sensor Value",
+                    data: values,
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2
+                }]
             },
-        },
-        scales: {
-            xAxes: [
-                {
-                    time: {
-                        unit: "hour",
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false,
-                    },
-                    ticks: {
-                        maxTicksLimit: 7,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Time (Hours)",
-                    },
-                },
-            ],
-            yAxes: [
-                {
-                    ticks: {
-                        maxTicksLimit: 5,
-                        padding: 10,
-                        
-                        callback: function (value, index, values) {
-                            return number_format(value);
+            options: {
+                maintainAspectRatio: false,
+                layout: { padding: { left: 10, right: 25, top: 25, bottom: 0 } },
+                scales: {
+                    xAxes: [{
+                        gridLines: { display: false, drawBorder: false },
+                        ticks: { maxTicksLimit: 12 },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time (Hours)"
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            maxTicksLimit: 5,
+                            padding: 10,
+                            callback: value => number_format(value)
                         },
-                    },
-                    gridLines: {
-                        color: "rgb(234, 236, 244)",
-                        zeroLineColor: "rgb(234, 236, 244)",
-                        drawBorder: false,
-                        borderDash: [2],
-                        zeroLineBorderDash: [2],
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: "N Value (ppm)",
-                    },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Sensor Value"
+                        },
+                        gridLines: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2],
+                        }
+                    }]
                 },
-            ],
-        },
-        legend: {
-            display: false,
-        },
-        tooltips: {
-            backgroundColor: "rgb(255,255,255)",
-            bodyFontColor: "#858796",
-            titleMarginBottom: 10,
-            titleFontColor: "#6e707e",
-            titleFontSize: 14,
-            borderColor: "#dddfeb",
-            borderWidth: 1,
-            xPadding: 15,
-            yPadding: 15,
-            displayColors: false,
-            intersect: false,
-            mode: "index",
-            caretPadding: 10,
-            callbacks: {
-                label: function (tooltipItem, chart) {
-                    var datasetLabel =
-                        chart.datasets[tooltipItem.datasetIndex].label || "";
-                    return (
-                        datasetLabel + ": " + number_format(tooltipItem.yLabel)
-                    );
-                },
-            },
-        },
-    },
-});
+                legend: { display: false },
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    titleFontColor: "#6e707e",
+                    titleFontSize: 14,
+                    borderColor: "#dddfeb",
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    mode: "index",
+                    intersect: false,
+                    caretPadding: 10,
+                    callbacks: {
+                        label: function (tooltipItem, chart) {
+                            return "Sensor Value: " + number_format(tooltipItem.yLabel);
+                        },
+                    }
+                }
+            }
+        });
+    }
+
+    function updateSummary(data) {
+        const summary = document.querySelector('.data-summary');
+        summary.innerHTML = ''; // clear
+
+        data.forEach(item => {
+            summary.innerHTML += `<p class="mb-2">${item.hour}: <span class="font-weight-bold">${item.value}</span></p>`;
+        });
+    }
+
+    // Trigger fetch on page load & when sensor/date changes
+    document.addEventListener('DOMContentLoaded', fetchSensorData);
+    document.getElementById('sensorTypeSelect').addEventListener('change', fetchSensorData);
+    document.getElementById('dateRange').addEventListener('change', fetchSensorData);

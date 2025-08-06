@@ -12,21 +12,29 @@ class DashboardController extends Controller
         return view('dashboard');
     } 
 
-    public function postDaily() {
+    public function postDaily(Request $request) {
+        $date = $request->input('date');
+        $sensor = strtolower($request->input('sensor'));
 
         $response = Http::post('http://localhost:3000/api/crop/daily', [
-            'date' => '2024-01-02',
+            'date' => $date,
         ]);
 
         if ($response->successful()) {
             $data = $response->json();
-            dd($data);
 
-            return response()->json(['message' => 'Data berhasil diambil', 'response_data' => $data]);
-        } else {
-            $statusCode = $response->status();
-            $errorMessage = $response->body();
-            return response()->json(['message' => 'Gagal ambil data', 'status_code' => $statusCode, 'error_message' => $errorMessage], $statusCode);
+            $data = collect($json['data'])->map(function($item) use ($sensor) {
+                return [
+                    'hour' => date('H:i' , strotime($item['date'])),
+                    'value' => $item[$sensor] ?? null
+                ];
+            });
+
+            return response()->json([
+                'sensorData' => $data,
+            ]);
         }
+
+        return response()->json(['message' => 'Gagal ambil data'], $response->status());
     }
 }

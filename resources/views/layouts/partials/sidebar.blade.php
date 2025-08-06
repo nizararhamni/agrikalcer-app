@@ -58,7 +58,7 @@
     <li class="nav-item {{ request()->routeIs('notifications') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route ('notifications') }}">
             <i class="fas fa-fw fa-bell"></i>
-            <span>Notificationn</span>
+            <span>Notification</span>
         </a>
     </li>
 
