@@ -14,7 +14,7 @@
         <button type="submit">Lihat Data</button>
       </form>
     <h4 class="h4">Data Hari Ini</h4>
-    <table class="table">
+      <table class="table">
         <thead>
           <tr>
             <th scope="col">Voltage</th>

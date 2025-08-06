@@ -23,7 +23,6 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::post('/dashboard/fetch-sensor', [DashboardController::class, 'postDaily']);
 
 Route::get('/recommender', [RecommenderController::class, 'index'])->name('recommender');
 

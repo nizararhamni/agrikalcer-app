@@ -5,36 +5,52 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {   
     public function index() {
-        return view('dashboard');
-    } 
 
-    public function postDaily(Request $request) {
-        $date = $request->input('date');
-        $sensor = strtolower($request->input('sensor'));
-
+        $dateToday = Carbon::now();
         $response = Http::post('http://localhost:3000/api/crop/daily', [
-            'date' => $date,
+            'date' =>'2024-01-01' ,
         ]);
 
         if ($response->successful()) {
             $data = $response->json();
+            $dataDaily = $data["data"];
 
-            $data = collect($json['data'])->map(function($item) use ($sensor) {
-                return [
-                    'hour' => date('H:i' , strotime($item['date'])),
-                    'value' => $item[$sensor] ?? null
-                ];
-            });
-
-            return response()->json([
-                'sensorData' => $data,
+            return view('dashboard', [
+                "dataDaily" => $dataDaily,
+                "dateToday" => $dateToday
             ]);
-        }
 
-        return response()->json(['message' => 'Gagal ambil data'], $response->status());
+        } else {
+            $statusCode = $response->status();
+            $errorMessage = $response->body();
+            return view('dashboard');
+        }
+    }
+    
+    public function daily(Request $request) {
+        $dateToday = Carbon::now();
+        $response = Http::post('http://localhost:3000/api/crop/daily', [
+            'date' =>$request->tanggal,
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $dataPv = $data["data"];
+
+            return view('dashboard', [
+                "dataDaily" => $dataPv,
+                "dateToday" => $dateToday
+            ]);
+
+        } else {
+            $statusCode = $response->status();
+            $errorMessage = $response->body();
+            return view('dashboard');
+        }
     }
 }

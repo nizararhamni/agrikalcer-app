@@ -53,7 +53,7 @@
                     
                     <div class="data-summary" style="max-height: 228px; overflow-y: auto;">
                         <div class="text-sm">
-                            <p class="mb-2">  <span class="font-weight-bold">45.2</span></p>
+                            <p class="mb-2">00:00: <span class="font-weight-bold">45.2</span></p>
                             <p class="mb-2">02:00: <span class="font-weight-bold">52.1</span></p>
                             <p class="mb-2">04:00: <span class="font-weight-bold">48.7</span></p>
                             <p class="mb-2">06:00: <span class="font-weight-bold">61.3</span></p>
@@ -84,37 +84,28 @@
         
         document.getElementById('sensorTypeSelect').addEventListener('change', function() {
             const sensorMap = {
-                'N': 'n',
-                'P': 'p',
-                'K': 'k',
-                'Temperature': 'temp',
-                'pH': 'ph',
-                'Humidity': 'humidity'
+                'N': 'N (Nitrogen)',
+                'P': 'P (Phosphorus)', 
+                'K': 'K (Potassium)',
+                'Temperature': 'Temperature',
+                'pH': 'pH',
+                'Humidity': 'Humidity'
             };
-
-            async function fetchSensorData() {
-                const date = document.getElementById('dateRange').value;
-                const sensor = document.getElementById('sensorTypeSelect').value;
-                const sensorKey = sensorMap[sensor];
-
-                const res = await fetch('/dashboard/fetch-sensor', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ date: date, sensor: sensorKey })
-                });
-
-                const result = await res.json();
-
-                if (result.sensorData) {
-                    const labels = result.sensorData.map(item => item.hour);
-                    const values = result.sensorData.map(item => item.value);
-
-                    updateChart(labels, values);
-                    updateSummary(result.sensorData);
-                }
+            
+            document.getElementById('selectedSensor').textContent = sensorMap[this.value];
+            
+            const chartYAxisLabel = {
+                'N': 'N Value (ppm)',
+                'P': 'P Value (ppm)',
+                'K': 'K Value (ppm)',
+                'Temperature': 'Temperature (°C)',
+                'pH': 'pH Level',
+                'Humidity': 'Humidity (%)'
+            };
+            
+            if (typeof myLineChart !== 'undefined') {
+                myLineChart.options.scales.yAxes[0].scaleLabel.labelString = chartYAxisLabel[this.value];
+                myLineChart.update();
             }
         });
     </script>
