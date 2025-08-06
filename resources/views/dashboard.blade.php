@@ -84,28 +84,37 @@
         
         document.getElementById('sensorTypeSelect').addEventListener('change', function() {
             const sensorMap = {
-                'N': 'N (Nitrogen)',
-                'P': 'P (Phosphorus)', 
-                'K': 'K (Potassium)',
-                'Temperature': 'Temperature',
-                'pH': 'pH',
-                'Humidity': 'Humidity'
+                'N': 'n',
+                'P': 'p',
+                'K': 'k',
+                'Temperature': 'temp',
+                'pH': 'ph',
+                'Humidity': 'humidity'
             };
-            
-            document.getElementById('selectedSensor').textContent = sensorMap[this.value];
-            
-            const chartYAxisLabel = {
-                'N': 'N Value (ppm)',
-                'P': 'P Value (ppm)',
-                'K': 'K Value (ppm)',
-                'Temperature': 'Temperature (°C)',
-                'pH': 'pH Level',
-                'Humidity': 'Humidity (%)'
-            };
-            
-            if (typeof myLineChart !== 'undefined') {
-                myLineChart.options.scales.yAxes[0].scaleLabel.labelString = chartYAxisLabel[this.value];
-                myLineChart.update();
+
+            async function fetchSensorData() {
+                const date = document.getElementById('dateRange').value;
+                const sensor = document.getElementById('sensorTypeSelect').value;
+                const sensorKey = sensorMap[sensor];
+
+                const res = await fetch('/dashboard/fetch-sensor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ date: date, sensor: sensorKey })
+                });
+
+                const result = await res.json();
+
+                if (result.sensorData) {
+                    const labels = result.sensorData.map(item => item.hour);
+                    const values = result.sensorData.map(item => item.value);
+
+                    updateChart(labels, values);
+                    updateSummary(result.sensorData);
+                }
             }
         });
     </script>
