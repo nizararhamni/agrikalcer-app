@@ -12,7 +12,7 @@ class PhotovoltaicController extends Controller
 
         $dateToday = Carbon::now();
         $response = Http::post('http://localhost:3000/api/pv/daily', [
-            'date' =>'2024-01-01' ,
+            'date' =>'2024-01-03',
         ]);
 
         if ($response->successful()) {
@@ -30,4 +30,26 @@ class PhotovoltaicController extends Controller
             return view('photovoltaic');
         }
     } 
+
+    public function daily(Request $request) {
+        $dateToday = Carbon::now();
+        $response = Http::post('http://localhost:3000/api/pv/daily', [
+            'date' =>$request->tanggal,
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $dataPv = $data["data"];
+
+            return view('photovoltaic', [
+                "dataPv" => $dataPv,
+                "dateToday" => $dateToday
+            ]);
+
+        } else {
+            $statusCode = $response->status();
+            $errorMessage = $response->body();
+            return view('photovoltaic');
+        }
+    }
 }

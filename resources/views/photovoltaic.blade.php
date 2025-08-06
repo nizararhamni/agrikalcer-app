@@ -5,8 +5,14 @@
 @section('content')
     <div class="d-sm-flex mb-4 align-items-center justify-center">
         <h1 class="h3 mb-0 text-gray-800">Photovoltaic</h1>
-        <p class="ml-5">Tanggal Hari ini: {{ $dateToday }}</p>
-    </div>
+      </div>
+      <form action="{{ route('pv-daily') }}" method="post">
+        @csrf
+        @method('POST')
+        <label for="tanggal">Masukkan Tanggal (format: yyyy-mm-dd)</label>
+        <input type="datetime" name="tanggal" id="tanggal" class="mb-5">
+        <button type="submit">Lihat Data</button>
+      </form>
     <h4 class="h4">Data Hari Ini</h4>
       <table class="table">
         <thead>
@@ -20,7 +26,6 @@
             <th scope="col">Load Voltage</th>
             <th scope="col">Load Current</th>
             <th scope="col">Load Power</th>
-            <th scope="col">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +40,6 @@
             <td>{{ $data["load_voltage"] }}</td>
             <td>{{ $data["load_current"] }}</td>
             <td>{{ $data["load_power"] }}</td>
-            <td>{{ $data["date"] }}</td>
           </tr>
           @endforeach
         </tbody>
